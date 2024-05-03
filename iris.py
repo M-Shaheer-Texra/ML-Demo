@@ -24,7 +24,6 @@ y_iris_pred = linear_regression_model.predict(X_iris_test)
 print("Mean squared error For iris using linear regression:",mean_squared_error(y_iris_test, y_iris_pred))
 
 logistic_regression_model = LogisticRegression()
-
 logistic_regression_model.fit(X_iris_train, y_iris_train)
 
 y_iris_pred = logistic_regression_model.predict(X_iris_test)
