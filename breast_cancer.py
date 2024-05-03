@@ -24,6 +24,7 @@ y_breast_cancer = breast_cancer_data.target
 
 X_breast_cancer_train, X_breast_cancer_test, y_breast_cancer_train, y_breast_cancer_test = train_test_split(X_breast_cancer, y_breast_cancer, test_size=0.3, random_state=42)
 
+linear_regression_model = LinearRegression()
 
 linear_regression_model.fit(X_breast_cancer_train, y_breast_cancer_train)
 
@@ -31,17 +32,23 @@ y_breast_cancer_pred = linear_regression_model.predict(X_breast_cancer_test)
 
 print("Mean squared error For breast cancer using linear regression:",mean_squared_error(y_breast_cancer_test, y_breast_cancer_pred))
 
+decision_tree_model = DecisionTreeClassifier()
+
 decision_tree_model.fit(X_breast_cancer_train, y_breast_cancer_train)
 
 y_breast_cancer_pred = decision_tree_model.predict(X_breast_cancer_test)
 
 print("Accuracy score For breast cancer using Decision Tree:",accuracy_score(y_breast_cancer_test, y_breast_cancer_pred))
 
+k_neighbors_model = KNeighborsClassifier(n_neighbors=4)
+
 k_neighbors_model.fit(X_breast_cancer_train, y_breast_cancer_train)
 
 y_breast_cancer_pred = k_neighbors_model.predict(X_breast_cancer_test)
 
 print("Accuracy score For breast cancer using K-Neighbors:",accuracy_score(y_breast_cancer_test, y_breast_cancer_pred))
+
+naive_bayes_model = GaussianNB()
 
 naive_bayes_model.fit(X_breast_cancer_train, y_breast_cancer_train)
 
