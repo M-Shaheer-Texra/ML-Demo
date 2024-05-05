@@ -1,4 +1,5 @@
 import tensorflow as tf
+import pickle
 print(tf.__version__)
 mnist = tf.keras.datasets.mnist
 
@@ -15,7 +16,7 @@ model = tf.keras.Sequential([
 predictions = model(x_train[:1]).numpy()
 tf.nn.softmax(predictions).numpy()
 # loss_fn = tf.keras.losses.sparse_categorical_crossentropy(from_logits=True)
-#
+
 # model.compile(optimizer = 'adam',
 #               loss = loss_fn,
 #               metrics = ['accuracy'])
