@@ -1,5 +1,6 @@
 import tensorflow as tf
-import pickle
+
+
 print(tf.__version__)
 mnist = tf.keras.datasets.mnist
 
@@ -31,7 +32,6 @@ model.compile(optimizer='adam',
               loss=loss_fn,
               metrics=['accuracy'])
 
-model.fit(x_train, y_train, epochs=5)
+model.fit(x_train, y_train, epochs=3)
 
 print(model.evaluate(x_test,  y_test, verbose=2))
-
