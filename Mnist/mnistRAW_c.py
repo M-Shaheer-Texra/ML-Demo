@@ -1,12 +1,19 @@
 from PIL import Image
 import keras
 import numpy as np
+from PIL import Image, ImageOps
 import tensorflow as tf
 from keras import layers
 from keras import Sequential
 from sklearn.metrics import precision_recall_fscore_support, confusion_matrix, accuracy_score
 import matplotlib.pyplot as plt
 
+# def rbg2gray(images):
+#     grey_images = []
+#     for image in images:
+#         img_gray = ImageOps.grayscale(image)
+#         grey_images.append(img_gray)
+#     return grey_images
 
 data_set_path = "C:/Users/Nadeem/Desktop/ML-Demo/data/mnistdata/trainingSet/trainingSet"
 
@@ -29,10 +36,8 @@ x, y = zip(*test_data)
 X_test = np.concatenate(x)
 y_test = np.concatenate(y)
 
-#write a lambda function for average for y_train and y_test
 y_train = y_train.argmax(axis=1)
 y_test = y_test.argmax(axis=1)
-
 
 #normalize these images
 X_train = X_train.astype('float32') / 255.0
