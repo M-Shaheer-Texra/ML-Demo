@@ -66,7 +66,7 @@ model.summary()
 #Compiling and fitting model
 model.compile(
     loss='sparse_categorical_crossentropy',
-    optimizer= keras.optimizers.Adam(learning_rate=1e-3),
+    optimizer= keras.optimizers.Adam(),
     metrics=['accuracy']
 )
 

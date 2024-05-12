@@ -1,13 +1,11 @@
 import pandas as pd
 import numpy as np
 import csv
-from PIL import Image
-from sklearn.model_selection import train_test_split
 import keras
-from keras import Sequential
 from keras import layers
 import tensorflow as tf
-import os
+from sklearn.metrics import accuracy_score
+
 
 raw_data = pd.read_csv("C:/Users/Nadeem/Desktop/ML-Demo/data/MNist hand sign data/sign_mnist_train/sign_mnist_train.csv")
 column_name = raw_data["label"].unique()
@@ -47,25 +45,26 @@ print(training_labels.shape)
 print(validation_images.shape)
 print(validation_labels.shape)
 
-input_shape = training_images.shape
 
-model = Sequential()
+training_labels = tf.one_hot(training_labels, len(column_name))
+validation_labels = tf.one_hot(validation_labels, len(column_name))
+
 initial_lr = 0.0001
 
 model = keras.Sequential([
-    layers.InputLayer(input_shape),
 
     # Convulutional Block
-    layers.Conv2D(filters=8, kernel_size=3, strides=2, padding='valid', activation='relu'),
-    layers.Conv2D(filters=16, kernel_size=3, strides=2, padding='same', activation='relu'),
+    layers.Conv2D(filters=8, kernel_size=3, strides=2, padding='valid', activation='relu', input_shape=(28, 28, 1)),
     layers.Conv2D(filters=32, kernel_size=3, strides=2, padding='same', activation='relu'),
+
     layers.Flatten(),
 
     # Fully Connected Block
     layers.Dense(32, activation='relu'),
-    layers.Dense(16, activation='relu'),
     layers.Dense(len(column_name), activation='softmax')
 ])
+
+
 
 model.compile(optimizer=keras.optimizers.Adam(learning_rate=initial_lr),
                      loss='categorical_crossentropy', metrics=['accuracy'])
@@ -73,6 +72,11 @@ model.summary()
 
 model.fit(
     training_images, training_labels,
-    epochs=10,
-    batch_size=32
+    epochs=8,
+    batch_size=62
 )
+
+y_hat = model.predict(validation_images)
+y_hat = tf.nn.softmax(y_hat).numpy()
+y_hat = np.argmax(y_hat, axis=1)
+print(model.evaluate(validation_images, validation_labels))
