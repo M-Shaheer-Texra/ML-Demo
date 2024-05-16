@@ -38,60 +38,36 @@ def train_test_generator(X_train,y_train,X_test,y_test):
 
 
 training_data, validation_data = train_test_generator(X_train,y_train,X_test,y_test)
-# Maybe I will need to change the shape of the input
 
-# But for now lets focus on creating the model
-def build_model(hp):
-    base_model = keras.applications.vgg16(
-        weights='imagenet',
-        include_top=False,
-        input_shape=(32,32,3)
-    )
-    model = Sequential([
-        keras.layers.add(base_model),
-        keras.layers.Conv2D(
-            filters=hp.Int("conv_1_filter", min_value=32, max_value=128, step=16),
+def build_hyper_model(hp):
+  model = keras.Sequential()
+  num_layers = hp.Int('num_layers', min_value=1, max_value=10, step=1)
+  for i in range(num_layers):
+    model.add(keras.layers.Conv2D(
+       filters=hp.Int("conv_1_filter" + str(i), min_value=32, max_value=128, step=16),
             kernel_size=hp.Choice("conv_1_kernel", values=[3, 5]),
             activation="relu",
-            input_shape=(28, 28, 1)
-        ),
-        keras.layers.MaxPooling2D(2, 2),
-        keras.layers.Conv2D(
-            filters=hp.Int("conv_2_filter", min_value=32, max_value=64, step=16),
-            kernel_size=hp.Choice("conv_2_kernel", values=[3, 5]),
-            activation="relu"
-        ),
-        keras.layers.MaxPooling2D(2, 2),
-        keras.layers.Flatten(),
-        keras.layers.Dense(
-            units=hp.Int("dense_1_units", min_value=32, max_value=128, step=16),
-            activation="relu"
-        ),
-        keras.layers.Dense(10, activation="softmax")
-    ])
-
-    for layer in base_model.layers:
-        layer.trainable = False
+            input_shape=(32, 32, 3)
+    ))
+    model.add(keras.layers.Dense(
+     units = hp.Int("dense_units", min_value=32, max_value=128, step=16),
+      activation= hp.Choice('dense_activation', values=['relu', 'tanh'])
+    ))
+    model.add(keras.layers.Dense(10, activation='softmax'))
 
     model.compile(
         optimizer=keras.optimizers.Adam(hp.Choice("learning_rate", values=[1e-2, 1e-3])),
         loss="sparse_categorical_crossentropy",
-        metrics=["accuracy"]
-    )
-    return model
+        metrics=["accuracy"])
 
-# #using keras tuner
-# tuner = RandomSearch(build_model,
+  return model
+#
+# tuner = RandomSearch(build_hyper_model,
 #                     objective='val_accuracy',
 #                      max_trials = 4)
 #
 # tuner.search(training_data,epochs=3,validation_data=(validation_data.x,validation_data.y))
 #
 # best_hps = tuner.get_best_hyperparameters()[0]
-# model_tuned = build_model(best_hps)
+# model_tuned = build_hyper_model(best_hps)
 # model_tuned.summary()
-
-
-
-
-
